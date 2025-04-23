@@ -17,25 +17,30 @@
              rotation="0 -90 0">
       </a-sky>
 
-      <!-- BOTÃO: PRÓXIMA CENA -->
-      <a-entity id="btnNext"
-                geometry="primitive: plane; height: 0.4; width: 1.5"
-                material="color: #00C851; opacity: 0.8"
-                position="1.6 1.6 -3"
-                text="value: Próxima Cena; align: center"
-                class="clickable">
-      </a-entity>
+      <!-- BOTÃO IMAGEM: PRÓXIMA CENA -->
+      <a-image id="btnNext"
+               src="https://cdn.glitch.global/1fd8dfe9-27b6-4669-9072-6363be0bd8e4/direita.png?v=1745372980050"
+              material="color: white"
+               position="1.6 1.6 -3"
+              
+               width="0.5"
+               height="0.5"
+               class="clickable">
+      </a-image>
 
-      <!-- BOTÃO: VOLTAR CENA -->
-      <a-entity id="btnBack"
-                geometry="primitive: plane; height: 0.4; width: 1.5"
-                material="color: #ff4444; opacity: 0.8"
-                position="-1.6 1.6 -3"
-                text="value: Cena Anterior; align: center"
-                class="clickable">
-      </a-entity>
+      <!-- BOTÃO IMAGEM: VOLTAR CENA -->
+      <a-image id="btnBack"
+               src="https://cdn.glitch.global/1fd8dfe9-27b6-4669-9072-6363be0bd8e4/esqurda.png?v=1745372984340"
+               
+               material="color: white"
+               position="-1.6 1.6 -3"
+               
+               width="0.5"
+               height="0.5"
+               class="clickable">
+      </a-image>
 
-      <!-- CÂMERA COM CURSOR PARA VR/MOBILE -->
+      <!-- CÂMERA COM CURSOR -->
       <a-entity camera look-controls wasd-controls position="0 1.6 0">
         <a-entity cursor="fuse: true; fuseTimeout: 1000"
                   position="0 0 -1"
