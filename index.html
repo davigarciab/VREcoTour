@@ -13,13 +13,14 @@
 
       <!-- IMAGEM 360° -->
       <a-sky id="sky"
-             src="https://cdn.glitch.global/1fd8dfe9-27b6-4669-9072-6363be0bd8e4/cena1.jpg?v=1745371063357"
-             rotation="0 -90 0">
+             src="cenas/01.jpg"
+             rotation="0 -90 0"
+             crossorigin="anonymous">
       </a-sky>
 
       <!-- BOTÃO IMAGEM: PRÓXIMA CENA -->
       <a-image id="btnNext"
-               src="https://cdn.glitch.global/1fd8dfe9-27b6-4669-9072-6363be0bd8e4/direita.png?v=1745372980050"
+               src="assets/direita.png"
                material="color: white"
                position="1.6 1.6 -3"
               
@@ -30,7 +31,7 @@
 
       <!-- BOTÃO IMAGEM: VOLTAR CENA -->
       <a-image id="btnBack"
-               src="https://cdn.glitch.global/1fd8dfe9-27b6-4669-9072-6363be0bd8e4/esqurda.png?v=1745372984340"
+               src="assets/esqurda.png"
                
                material="color: white"
                position="-1.6 1.6 -3"
@@ -52,13 +53,20 @@
     </a-scene>
 
     <script>
+      // Debug: log erros globais de recursos
+      window.addEventListener('error', (e) => {
+        try {
+          console.error('[GLOBAL ERROR]', e.message || e, e);
+        } catch (_) {}
+      }, true);
+
       const imagens = [
-        "https://cdn.glitch.global/1fd8dfe9-27b6-4669-9072-6363be0bd8e4/cena1.jpg?v=1745371063357",
-        "https://cdn.glitch.global/1fd8dfe9-27b6-4669-9072-6363be0bd8e4/cena2.jpg?v=1745371075685",
-        "https://cdn.glitch.global/1fd8dfe9-27b6-4669-9072-6363be0bd8e4/cena3.jpeg?v=1745371078694",
-        "https://cdn.glitch.global/1fd8dfe9-27b6-4669-9072-6363be0bd8e4/cena4.jpg?v=1745371082311",
-        "https://cdn.glitch.global/1fd8dfe9-27b6-4669-9072-6363be0bd8e4/cena5.jpeg?v=1745371085487",
-        "https://cdn.glitch.global/1fd8dfe9-27b6-4669-9072-6363be0bd8e4/cena6.jpg?v=1745371088421"
+        "cenas/01.jpg",
+        "cenas/02.jpg",
+        "cenas/03.jpeg",
+        "cenas/04.jpg",
+        "cenas/05.jpeg",
+        "cenas/06.jpg"
       ];
 
       let indiceAtual = 0;
@@ -66,14 +74,50 @@
       const btnNext = document.querySelector('#btnNext');
       const btnBack = document.querySelector('#btnBack');
 
+      // Debug: eventos do material do A-Frame
+      sky.addEventListener('materialtextureloaded', (e) => {
+        console.log('[A-FRAME] textura carregada', { src: sky.getAttribute('src'), detail: e.detail });
+      });
+      sky.addEventListener('materialtextureerror', (e) => {
+        console.error('[A-FRAME] erro ao carregar textura', { src: sky.getAttribute('src'), detail: e.detail });
+      });
+
+      // Pré-carregamento simples com CORS
+      function preloadImages(urls) {
+        urls.forEach((url, idx) => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = async () => {
+            console.log('[PRELOAD] onload', { idx, url, width: img.naturalWidth, height: img.naturalHeight });
+            if (img.decode) {
+              try {
+                await img.decode();
+                console.log('[PRELOAD] decode OK', { idx, url });
+              } catch (err) {
+                console.warn('[PRELOAD] decode falhou', { idx, url, err });
+              }
+            }
+          };
+          img.onerror = (err) => {
+            console.error('[PRELOAD] onerror', { idx, url, err });
+          };
+          img.src = url;
+        });
+      }
+      preloadImages(imagens);
+
       btnNext.addEventListener('click', () => {
         indiceAtual = (indiceAtual + 1) % imagens.length;
-        sky.setAttribute('src', imagens[indiceAtual]);
+        const nextSrc = imagens[indiceAtual];
+        console.log('[NAV] next', { indiceAtual, nextSrc });
+        sky.setAttribute('src', nextSrc);
       });
 
       btnBack.addEventListener('click', () => {
         indiceAtual = (indiceAtual - 1 + imagens.length) % imagens.length;
-        sky.setAttribute('src', imagens[indiceAtual]);
+        const prevSrc = imagens[indiceAtual];
+        console.log('[NAV] back', { indiceAtual, prevSrc });
+        sky.setAttribute('src', prevSrc);
       });
     </script>
   </body>
